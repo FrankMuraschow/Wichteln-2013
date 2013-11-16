@@ -1,0 +1,5 @@
+AuthUserFile /www/htdocs/w00be89c//Wichteln2013/usage//.htpasswd
+AuthGroupFile /dev/null
+AuthName 'ByPassword'
+AuthType Basic
+require valid-user

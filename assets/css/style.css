@@ -1,0 +1,68 @@
+html, body {
+	height: 100%;         /* required */
+}
+body {
+	text-align: center;   /* horizontal centering hack for IE */
+	padding: 0;           /* required to "hide" distance div */
+	margin: 0;            /* required to "hide" distance div */
+	background: #691316;
+	color: #fff;
+}
+div#distance {
+	margin-bottom: -350px; /* half of content height */
+	background: red;      /* temporary - used to see div */
+	width: 1px;           /* required to "hide" distance div */
+	height: 50%;          /* required */
+	float: left;          /* required */
+}
+div#content, div#contentPhaseTwo {
+	position: relative;   /* positions content on top of distance */
+	text-align: left;     /* horizontal centering hack for IE */
+	height: 700px;         /* required - desired height */
+	width: 1000px;          /* required - desired width */
+	background: url(../img/bg.png);     /* cosmetic */
+	margin: 0 auto;       /* required */
+	clear: left;          /* required */
+	border: #d73f28 1px solid;
+	-webkit-box-shadow:  0px 0px 25px 5px rgba(11, 0, 0, 1);        
+	box-shadow:  0px 0px 25px 5px rgba(11, 0, 0, 1);	
+}
+div#contentPhaseTwo {
+	background: url(../img/bgPhaseTwo.png);
+}
+div#loginfield {
+	position: relative;
+	left: 137px;
+	top: 265px;
+	/*	background: #eee;*/
+	height: 124px;
+	width: 444px;
+}
+input#masterPw {
+	width: 92%;
+	height: 50%;
+	margin: 2% 3%;
+	font-size: 32pt;
+	font-family: Arial, Helvetica, sans-serif;
+}
+input#masterPwClick, input#masterPwClickPhaseTwo {
+	width: 40%;
+	height: 28%;
+	margin: 2% 30%;
+}
+div#whoAreYou {
+	/*width: 40%;
+	 height: 28%;*/
+	margin: 2% 5%;
+	font-family: sans-serif;
+}
+input#user_participates {
+	width: 100%;
+}
+span#noEmail {
+	cursor: pointer;
+	color: #00f;
+}
+span#emailSent {
+	color: #00f;
+}

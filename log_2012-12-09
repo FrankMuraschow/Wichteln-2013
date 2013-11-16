@@ -1,0 +1,26 @@
+06:24:37 (dbConnectController) B: getUsers()
+06:24:37 (dbConnectController) B: List of users: 
+06:24:37 (dbConnectController) Andreas N.
+06:24:37 (dbConnectController) Jan M.
+06:24:37 (dbConnectController) Kristin K.
+06:24:37 (dbConnectController) Kristin M.
+06:24:37 (dbConnectController) Maria F.
+06:24:37 (dbConnectController) Michael P
+06:24:37 (dbConnectController) Peter B.
+06:24:37 (dbConnectController) Robert M.
+06:24:37 (dbConnectController) Susanne S.
+06:24:37 (dbConnectController) E: List of users: 
+06:24:37 (dbConnectController) E: getUsers()
+16:49:09 (dbConnectController) B: getUsers()
+16:49:09 (dbConnectController) B: List of users: 
+16:49:09 (dbConnectController) Andreas N.
+16:49:09 (dbConnectController) Jan M.
+16:49:09 (dbConnectController) Kristin K.
+16:49:09 (dbConnectController) Kristin M.
+16:49:09 (dbConnectController) Maria F.
+16:49:09 (dbConnectController) Michael P
+16:49:09 (dbConnectController) Peter B.
+16:49:09 (dbConnectController) Robert M.
+16:49:09 (dbConnectController) Susanne S.
+16:49:09 (dbConnectController) E: List of users: 
+16:49:09 (dbConnectController) E: getUsers()

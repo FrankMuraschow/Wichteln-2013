@@ -1,0 +1,11 @@
+21:45:16 (dbConnectController) B: getUsers()
+21:45:16 (dbConnectController) B: List of users: 
+21:45:16 (dbConnectController) Andreas N.
+21:45:16 (dbConnectController) Kristin M.
+21:45:16 (dbConnectController) Maria F.
+21:45:16 (dbConnectController) Michael P
+21:45:16 (dbConnectController) Peter B.
+21:45:16 (dbConnectController) Robert M.
+21:45:16 (dbConnectController) Susanne S.
+21:45:16 (dbConnectController) E: List of users: 
+21:45:16 (dbConnectController) E: getUsers()

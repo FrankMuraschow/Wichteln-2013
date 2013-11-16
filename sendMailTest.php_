@@ -1,0 +1,6 @@
+<?php
+require_once ("dbConnectController.php");
+$db = new dbConnectController();
+$db -> sendMail("Muri");
+$db -> closeConnection();
+?>
