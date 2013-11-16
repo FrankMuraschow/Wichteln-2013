@@ -1,23 +1,25 @@
 $(document).ready(function() {
+	"use strict";
 	$('#masterPw').live("click", function() {
-		if($('#masterPw').val() != "") {
+		if($('#masterPw').val() !=="") {
 			$('#masterPw').val("");
 		}
 
-	})
+	});
 
 	$('#masterPw').live("keypress", function(e) {
-		if(e.keyCode == 13 && $('#masterPw').val() != "") {
+		if(e.keyCode === 13 && $('#masterPw').val() !=="") {
 			$('#masterPwClick').click();
 		}
 
-	})
+	});
+	
 	$('#userPw').live("click", function() {
-		if($('#userPw').val() != "") {
+		if($('#userPw').val() !=="") {
 			$('#userPw').val("");
 		}
 
-	})
+	});
 
 	$('#masterPwClick').live("click", function() {
 		var masterPw = $("#masterPw").val();
@@ -31,15 +33,15 @@ $(document).ready(function() {
 			dataType : "text",
 			success : function(result) {
 				var resultLength = $.trim(result).length;
-				if(resultLength == 0) {
+				if(resultLength === 0) {
 					$('#masterPw').val("-Falsches Passwort-");
 				} else {
 					$('#checkMasterPW').css("display", "none");
 					$('#whoAreYouName').html(result);
 				}
 			}
-		})
-	})
+		});
+	});
 
 	$('#masterPwClickPhaseTwo').live("click", function() {
 		var masterPw = $("#masterPw").val();
@@ -53,15 +55,15 @@ $(document).ready(function() {
 			dataType : "text",
 			success : function(result) {
 				var resultLength = $.trim(result).length;
-				if(resultLength == 0) {
+				if(resultLength === 0) {
 					$('#masterPw').val("-Falsches Passwort-");
 				} else {
 					$('#checkMasterPW').css("display", "none");
 					$('#whoAreYouName').html(result);
 				}
 			}
-		})
-	})
+		});
+	});
 
 	$('#user_participates').live("click", function() {
 		$.ajax({
@@ -75,15 +77,15 @@ $(document).ready(function() {
 			dataType : "text",
 			success : function(result) {
 				var resultLenght = $.trim(result).length;
-				if(resultLenght == 0) {
+				if(resultLenght === 0) {
 					$('#userPw').val("-Falsches Passwort-");
 				} else {
 					$('#whoAreYouName').css("display", "none");
 					$('#whoAreYouCongrats').html(result);
 				}
 			}
-		})
-	})
+		});
+	});
 
 	$('#user_chose_wichtel').live("click", function() {
 		$.ajax({
@@ -97,15 +99,15 @@ $(document).ready(function() {
 			dataType : "text",
 			success : function(result) {
 				var resultLenght = $.trim(result).length;
-				if(resultLenght == 0) {
+				if(resultLenght === 0) {
 					$('#userPw').val("-Falsches Passwort-");
 				} else {
 					$('#whoAreYouName').css("display", "none");
 					$('#whoAreYouCongrats').html(result);
 				}
 			}
-		})
-	})
+		});
+	});
 
 	$('#user_chose_wichtel').live("click", function() {
 		$.ajax({
@@ -119,15 +121,15 @@ $(document).ready(function() {
 			dataType : "text",
 			success : function(result) {
 				var resultLenght = $.trim(result).length;
-				if(resultLenght == 0) {
+				if(resultLenght === 0) {
 					$('#userPw').val("-Falsches Passwort-");
 				} else {
 					$('#whoAreYouName').css("display", "none");
 					$('#whoAreYouCongrats').html(result);
 				}
 			}
-		})
-	})
+		});
+	});
 
 	$('#noEmail').live("click", function() {
 		$.ajax({
@@ -142,6 +144,6 @@ $(document).ready(function() {
 				$('#noEmail').html("E-Mail wurde versandt.");
 				$('#noEmail').attr('id', 'emailSent');
 			}
-		})
-	})
+		});
+	});
 })
