@@ -1,7 +1,9 @@
-var timeoutHandle = window.setTimeout(),
-imgAjaxLoader = "assets/img/ajax-loader.gif",
-imgValid = "assets/img/valid.png",
-imgInvalid = "assets/img/invalid.png";
+var emailValidationTimeoutHandle = window.setTimeout(),
+emailEqualityTimeoutHandle = window.setTimeout(),
+emailValid = false,
+imgAjaxLoader = "assets/img/ajax_loader_bars.gif",
+imgInvalid = "assets/img/cancel_24.png",
+imgValid = "assets/img/checkmark_24.png";
 
 $(document).ready(function() {"use strict";
 
@@ -27,13 +29,19 @@ $(document).ready(function() {"use strict";
     });
 
     $(document.body).on('keyup', '#firstEmail', function() {
-        console.log('keyUp');
-
-        if ($('#emailCheck').attr('src') !== imgAjaxLoader) {
-            $('#emailCheck').attr('src', imgAjaxLoader);
+        if ($('#emailCheck').css('background-image') !== "url("+imgAjaxLoader+")") {
+            $('#emailCheck').css('background-image', "url("+imgAjaxLoader+")");
         }
-        window.clearTimeout(timeoutHandle);
-        timeoutHandle = window.setTimeout('checkEmailValidation()', 1000);
+        window.clearTimeout(emailValidationTimeoutHandle);
+        emailValidationTimeoutHandle = window.setTimeout('checkEmailValidation()', 1250);
+    });
+    
+    $(document.body).on('keyup', '#secondEmail', function(){      
+        if ($('#emailCheckEquality').css('background-image') !== "url("+imgAjaxLoader+")") {
+            $('#emailCheckEquality').css('background-image', "url("+imgAjaxLoader+")");
+        }  
+        window.clearTimeout(emailEqualityTimeoutHandle);
+        emailEqualityTimeoutHandle = window.setTimeout('checkEmailEquality()', 1250);
     });
 
     $('#masterPwClick').on("click", function() {
@@ -53,6 +61,7 @@ $(document).ready(function() {"use strict";
                 } else {
                     $('#checkMasterPW').css("display", "none");
                     $('#whoAreYouName').html(result);
+                    $('#firstEmail').focus();
                 }
             }
         });
@@ -177,10 +186,26 @@ function checkEmailValidation() {"use strict";
             console.log('result: ' + result);
             var resultLength = $.trim(result).length;
             if (resultLength !== 0) {
-                $('#emailCheck').attr('src', imgValid);
+                emailValid = true;
+                $('#emailCheck').css('background-image', "url("+imgValid+")");
+                checkEmailEquality();
             } else {
-                $('#emailCheck').attr('src', imgInvalid);
+                emailValid = false;
+                $('#emailCheck').css('background-image', "url("+imgInvalid+")");
             }
         }
     });
+}
+
+function checkEmailEquality() {"use strict";
+    var firstEmail = $('#firstEmail').val(),
+    secondEmail = $('#secondEmail').val();
+    
+    if (emailValid && firstEmail === secondEmail) {
+        $('#emailCheckEquality').css('background-image', "url("+imgValid+")");
+    } else if(secondEmail){
+        $('#emailCheckEquality').css('background-image', "url("+imgInvalid+")");
+    } else {
+        $('#emailCheckEquality').css('background-image', "");
+    }
 }

@@ -217,9 +217,9 @@ function checkMaster($str) {
 		echo "<form id='whoAreYouForm'>";
 		echo "<table>";
 		echo "<tr><td colspan='2'>Bitte gib deine E-Mail Adresse ein:</td></tr>";
-		echo "<tr><td><input type='text' id='firstEmail'></td><td><img id='emailCheck' src='' /></tr>";
+		echo "<tr><td><input type='text' id='firstEmail' class='midInput'></td><td><div class='checkEmailIcon' id='emailCheck' /></tr>";
 		echo "<tr><td colspan='2'>Noch einmal zur Sicherheit:</td></tr>";
-		echo "<tr><td><input type='text' id='secondEmail'></td><td><img id='emailCheckEquality' src='' /></tr>";
+		echo "<tr><td><input type='text' id='secondEmail' class='midInput'></td><td><div class='checkEmailIcon' id='emailCheckEquality' /></tr>";
 		echo "<tr><td><input type='submit' value='Als Wichtel registrieren' />";		
 		echo "</table>";
 		echo "</form>";

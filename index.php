@@ -7,7 +7,7 @@
 		<div id="content">
 			<div id="loginfield">
 				<div id="checkMasterPW">
-					<input type="text" id="masterPw" />
+					<input type="text" id="masterPw" autofocus/>
 					<input type="button" id="masterPwClick" value="Pr&uuml;fe Passwichtelwort" />
 				</div>
 				<div id="whoAreYou">
