@@ -1,4 +1,6 @@
-AuthUserFile /www/htdocs/w00be89c//Wichteln2013/usage//.htpasswd
+RewriteEngine off
+DirectoryIndex webalizer.html
+AuthUserFile /www/htdocs/w00be89c//wichteln2013/usage//.htpasswd
 AuthGroupFile /dev/null
 AuthName 'ByPassword'
 AuthType Basic

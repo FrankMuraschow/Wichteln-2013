@@ -27,6 +27,9 @@ if (isset($_POST['action']) && !empty($_POST['action'])) {
 		case 'sendMail' :
 			sendMail($_POST['str']);
 			break;
+		case 'validateEmail' : 
+			validateEmail($_POST['str']);
+			break;
 	}
 }
 ?>
@@ -204,10 +207,22 @@ class dbConnectController {
 
 }
 
+function validateEmail($str) {
+	echo filter_var($str, FILTER_VALIDATE_EMAIL);
+}
+
 function checkMaster($str) {
 	$db = new dbConnectController();
-	if (md5($str) == "767870077154fa15357c8badfc2c5a5e") {
-		getUsers($db);
+	if (md5($str) == "78a575be3a8d26aa990a2685069da168") {		
+		echo "<form id='whoAreYouForm'>";
+		echo "<table>";
+		echo "<tr><td colspan='2'>Bitte gib deine E-Mail Adresse ein:</td></tr>";
+		echo "<tr><td><input type='text' id='firstEmail'></td><td><img id='emailCheck' src='' /></tr>";
+		echo "<tr><td colspan='2'>Noch einmal zur Sicherheit:</td></tr>";
+		echo "<tr><td><input type='text' id='secondEmail'></td><td><img id='emailCheckEquality' src='' /></tr>";
+		echo "<tr><td><input type='submit' value='Als Wichtel registrieren' />";		
+		echo "</table>";
+		echo "</form>";
 	}
 }
 
@@ -216,33 +231,6 @@ function checkMasterPhaseTwo($str) {
 	if (md5($str) == "767870077154fa15357c8badfc2c5a5e") {
 		getUsersPhaseTwo($db);
 	}
-}
-
-function getUsers($db) {
-	$db -> getLog() -> lwrite("B: getUsers()");
-	$result = $db -> getUsers();
-	if ($result) {
-		echo "<form id='whoAreYouForm'>";
-		echo "<table>";
-		echo "<tr><td>Wer bist du? - Bitte w&auml;hlen: </td><td><select id='whoAreYouSelector'><option value='empty'>----------</option>";
-
-		$db -> getLog() -> lwrite("B: List of users: ");
-		while ($row = $result -> fetch_assoc()) {
-			echo "<option value='" . $row['username'] . "'>" . $row['firstname'] . " " . $row['lastname'] . "</option>";
-			$db -> getLog() -> lwrite($row['firstname'] . " " . $row['lastname']);
-		}
-		$db -> getLog() -> lwrite("E: List of users: ");
-		echo "</select></td></tr>";
-		echo "<tr><td>Bitte gib dein pers&ouml;nliches Kennwort ein:</td><td><input type='text' id='userPw' /></td></tr>";
-		echo "<tr><td></td><td><input type='button' id='user_participates' value='Ja, ich nehme teil!'></input></td></tr>";
-		echo "</table>";
-		echo "</form>";
-	} else {
-		echo "Irgendein Fehler. Frag mal den Muri! Schnell!!";
-	}
-
-	$db -> closeConnection();
-	$db -> getLog() -> lwrite("E: getUsers()");
 }
 
 function getUsersPhaseTwo($db) {
