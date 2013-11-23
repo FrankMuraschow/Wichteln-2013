@@ -1,31 +1,32 @@
 html, body {
-	height: 100%;         /* required */
+	height: 100%; /* required */
+	font-family: Arial, Helvetica, sans-serif;
 }
 body {
-	text-align: center;   /* horizontal centering hack for IE */
-	padding: 0;           /* required to "hide" distance div */
-	margin: 0;            /* required to "hide" distance div */
-	background: #691316;
+	text-align: center; /* horizontal centering hack for IE */
+	padding: 0; /* required to "hide" distance div */
+	margin: 0; /* required to "hide" distance div */
+	background: rgba(47, 49, 97, 1);
 	color: #fff;
 }
 div#distance {
 	margin-bottom: -350px; /* half of content height */
-	background: red;      /* temporary - used to see div */
-	width: 1px;           /* required to "hide" distance div */
-	height: 50%;          /* required */
-	float: left;          /* required */
+	width: 1px; /* required to "hide" distance div */
+	height: 50%; /* required */
+	float: left; /* required */
 }
 div#content, div#contentPhaseTwo {
-	position: relative;   /* positions content on top of distance */
-	text-align: left;     /* horizontal centering hack for IE */
-	height: 700px;         /* required - desired height */
-	width: 1000px;          /* required - desired width */
-	background: url(../img/bg.png);     /* cosmetic */
-	margin: 0 auto;       /* required */
-	clear: left;          /* required */
-	border: #d73f28 1px solid;
-	-webkit-box-shadow:  0px 0px 25px 5px rgba(11, 0, 0, 1);        
-	box-shadow:  0px 0px 25px 5px rgba(11, 0, 0, 1);	
+	position: relative; /* positions content on top of distance */
+	text-align: left; /* horizontal centering hack for IE */
+	height: 700px; /* required - desired height */
+	width: 1000px; /* required - desired width */
+	background: url(../img/bg.png); /* cosmetic */
+	margin: 0 auto; /* required */
+	clear: left; /* required */
+	-webkit-box-shadow: 0px 0px 25px 5px rgba(0, 0, 11, 1);
+	box-shadow: 0px 0px 25px 5px rgba(0, 0, 11, 1);
+	overflow: hidden;
+	border: 1px solid #e5ecff;
 }
 div#contentPhaseTwo {
 	background: url(../img/bgPhaseTwo.png);
@@ -38,24 +39,35 @@ div#loginfield {
 	height: 124px;
 	width: 444px;
 }
-input#masterPw {
+
+div#dynamicContent {
+	height: 300px;
+	background: rgba(47, 49, 97, 0.9);
+}
+
+input {
+	height: 24px;
 	width: 92%;
-	height: 50%;
-	margin: 2% 3%;
-	font-size: 32pt;
-	font-family: Arial, Helvetica, sans-serif;
+	margin-right: 0;
+	text-align: left;
 }
-input#masterPwClick, input#masterPwClickPhaseTwo {
-	width: 40%;
-	height: 28%;
-	margin: 2% 30%;
+
+.centerAlign {
+	text-align: center;
 }
-div#whoAreYou {
-	/*width: 40%;
-	 height: 28%;*/
-	margin: 2% 5%;
-	font-family: sans-serif;
+
+.leftMargin {
+	margin-left: 3%;
 }
+
+.topMargin {
+	margin-top: 2%;
+}
+
+input#masterPw {
+	text-align: left;
+}
+
 input#user_participates {
 	width: 100%;
 }
@@ -67,13 +79,96 @@ span#emailSent {
 	color: #00f;
 }
 
+.topPadding {
+	padding-top: 20px;
+}
+
+.leftPadding {
+	padding-left: 20px;
+}
+
+.slideDownContainer {
+	display: inline-block;
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 40%;
+	max-width: 350px;
+	margin: 0;
+	margin-left: 5%;
+	border: 1px solid #e5ecff;
+	border-top: 0;
+	-webkit-transition: all 1s ease-in-out;
+	-moz-transition: all 1s ease-in-out;
+	-ms-transition: all 1s ease-in-out;
+	-o-transition: all 1s ease-in-out;
+	transition: all 1s ease-in-out;
+}
+
+.upState {
+	top: -324px;
+}
+
+.upState .arrowImage {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+	-ms-transform: rotate(180deg);
+}
+
 .checkEmailIcon {
 	height: 24px;
 	width: 24px;
 }
 
-.midInput {
+.smallInput, .midInput {
 	height: 24px;
-	width: 300px;
+	width: 150px;
 	line-height: 24px;
+}
+
+.midInput {
+	width: 250px;
+}
+
+.rotate {
+	/* Safari */
+	-webkit-transform: rotate(90deg);
+	/* Firefox */
+	-moz-transform: rotate(90deg);
+	/* IE */
+	-ms-transform: rotate(90deg);
+	/* Opera */
+	-o-transform: rotate(90deg);
+	/* Internet Explorer */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+}
+
+.bigButton {
+	background: rgba(4,4,16,1);
+	padding: 10px;
+	border-top: 2px solid #e5ecff;
+	cursor: pointer;
+}
+.bigButton > div {
+	display: inline-block;
+	line-height: 24px;
+}
+
+.arrowImage {
+	float: right;
+	height: 24px;
+	width: 24px;
+	background: url(../img/arrow_up_24.png) 0 0 no-repeat;
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0);
+	-ms-transform: rotate(0deg);
+	-webkit-transition: all 1s ease-in-out;
+	-moz-transition: all 1s ease-in-out;
+	-ms-transition: all 1s ease-in-out;
+	-o-transition: all 1s ease-in-out;
+	transition: all 1s ease-in-out;
 }

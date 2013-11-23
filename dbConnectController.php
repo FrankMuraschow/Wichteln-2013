@@ -214,13 +214,16 @@ function validateEmail($str) {
 function checkMaster($str) {
 	$db = new dbConnectController();
 	if (md5($str) == "78a575be3a8d26aa990a2685069da168") {		
-		echo "<form id='whoAreYouForm'>";
+		echo "<form id='whoAreYouForm' class='leftMargin'>";
 		echo "<table>";
 		echo "<tr><td colspan='2'>Bitte gib deine E-Mail Adresse ein:</td></tr>";
 		echo "<tr><td><input type='text' id='firstEmail' class='midInput'></td><td><div class='checkEmailIcon' id='emailCheck' /></tr>";
+		echo "<tr><td colspan='2'>&nbsp;</td></tr>";
 		echo "<tr><td colspan='2'>Noch einmal zur Sicherheit:</td></tr>";
 		echo "<tr><td><input type='text' id='secondEmail' class='midInput'></td><td><div class='checkEmailIcon' id='emailCheckEquality' /></tr>";
-		echo "<tr><td><input type='submit' value='Als Wichtel registrieren' />";		
+		echo "<tr><td colspan='2'>&nbsp;</td></tr>";
+		echo "<tr><td colspan='2'>&nbsp;</td></tr>";
+		echo "<tr><td><input type='submit' id='sendRegistration' disabled='disabled' value='Als Wichtel registrieren' class='smallInput' />";		
 		echo "</table>";
 		echo "</form>";
 	}
