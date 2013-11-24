@@ -1,3 +1,7 @@
+<?php
+require_once ('FirePHP.class.php');
+ob_start();
+?>
 <!DOCTYPE html>
 <html>
 	<?php
@@ -10,8 +14,10 @@
 				<div id="dynamicContent" class="wellVisible topPadding">
 					<div>
 						<div id="checkMasterPW">
-							<input type="text" id="masterPw" class="leftMargin topMargin" autofocus/>
-							<input type="button" id="masterPwClick" class="centerAlign leftMargin topMargin" value="Pr&uuml;fe Passwichtelwort" />
+							<input type="text" id="masterPw" class="leftMargin topMargin fullInput" autofocus/>
+							<div id="masterPwClick" class="centerAlign leftMargin topMargin fullInput smallButton">
+								Prüfe Passwichtelwort
+							</div>
 						</div>
 					</div>
 					<div class="errorMessage leftMargin bottomMargin bottomContainer" id="regError"></div>

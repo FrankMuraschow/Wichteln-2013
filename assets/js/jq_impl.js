@@ -4,9 +4,11 @@ jQuery(function($) {"use strict";
         return;
     }, 1000), emailEqualityTimeoutHandle = window.setTimeout(function() {
         return;
-    }, 1000), emailValid = false, emailEqual = false, imgAjaxLoader = "assets/img/ajax_loader_bars.gif", imgInvalid = "assets/img/cancel_24.png", imgValid = "assets/img/checkmark_24.png";
+    }, 1000), nickNameValidationTimeoutHandle = window.setTimeout(function() {
+        return;
+    }, 1000), emailValid = false, nickNameValid = false, emailEqual = false, imgAjaxLoader = "assets/img/ajax_loader_bars.gif", imgInvalid = "assets/img/cancel_24.png", imgValid = "assets/img/checkmark_24.png";
 
-    function validKeycode() {
+    function validKeycode(event) {
         return ((event.keyCode >= 48 && event.keyCode <= 90) || event.keyCode === 13 || event.keyCode === 8);
     }
 
@@ -49,6 +51,45 @@ jQuery(function($) {"use strict";
         });
     }
 
+    function checkNickNameValidation() {
+        var nickName = $('#nickName').val();
+        $.ajax({
+            url : "././dbConnectController.php",
+            type : "POST",
+            data : {
+                action : "validateNickName",
+                str : nickName
+            },
+            dataType : "text",
+            success : function(result) {
+                result = $.trim(result);
+                var resultLength = result.length;
+                if ($('#nickName').val().length) {
+                    if (resultLength !== 0) {
+                        if (result === '-1') {
+                            nickNameValid = false;
+                            $('#nameCheck').css('background-image', "url(" + imgInvalid + ")");
+                            errorMessage('show', 'Der Name ist schon vergeben')
+                        } else {
+                            nickNameValid = true;
+                            errorMessage('hide');
+                            $('#nameCheck').css('background-image', "url(" + imgValid + ")");
+                            checkEmailValidation();
+                        }
+                    } else {
+                        nickNameValid = false;
+                        errorMessage('show', 'Fehler');
+                        $('#nameCheck').css('background-image', "url(" + imgInvalid + ")");
+                    }
+                } else {
+                    errorMessage('hide');
+                    nickNameValid = false;
+                }
+            },
+            complete : checkRegisterButton
+        });
+    }
+
     function checkEmailEquality() {
         var firstEmail = $('#firstEmail').val(), secondEmail = $('#secondEmail').val();
 
@@ -69,10 +110,13 @@ jQuery(function($) {"use strict";
     }
 
     function checkRegisterButton() {
-        if (emailValid && emailEqual) {
-            $('#sendRegistration').removeAttr('disabled');
+        var button = $('#sendRegistration');
+        if (emailValid && emailEqual && nickNameValid) {
+            button.removeClass('disabled');
         } else {
-            $('#sendRegistration').attr('disabled', 'disabled');
+            if (!button.hasClass('disabled')) {
+                $('#sendRegistration').addClass('disabled');
+            }
         }
     }
 
@@ -131,29 +175,73 @@ jQuery(function($) {"use strict";
             }
         });
 
-        $(document.body).on('click', '#sendRegistration', function() {
-            $.ajax({
-                url : "././dbConnectController.php",
-                type : "POST",
-                data : ( {
-                    action : "registerUser",
-                    str : $('#firstEmail').val()
-                }),
-                dataType : "text",
-                success : function(result) {
-                    var bla = "";
-                }
-            });
+        $(document.body).on('click', '#sendRegistration:not(.disabled)', function() {
+            if (emailEqual && emailValid && nickNameValid) {
+                $.ajax({
+                    url : "././dbConnectController.php",
+                    type : "POST",
+                    data : ( {
+                        action : "registerUser",
+                        email : $('#firstEmail').val(),
+                        nickName : $('#nickName').val()
+                    }),
+                    beforeSend : function() {
+                        var registerCheck = $('#registerCheck');
+                        if (registerCheck.css('background-image') !== "url(" + imgAjaxLoader + ")") {
+                            registerCheck.css('background-image', "url(" + imgAjaxLoader + ")");
+                        }
+                    },
+                    dataType : "text",
+                    success : function(result) {
+                        result = $.trim(result);
+                        var registerCheck = $('#registerCheck'), td = $('#sendRegistration').closest('td');
+                        if (result) {
+                            errorMessage('show', 'Irgendwas ist schief gelaufen: ' + result);
+                            registerCheck.css('background-image', "url(" + imgInvalid + ")");
+                        } else {
+                            errorMessage('hide');
+                            registerCheck.css('background-image', "url(" + imgValid + ")");
+                            $('#sendRegistration').attr('disabled', 'disabled');
+                            $('#sendRegistration').fadeOut(500, function() {
+                                $('#sendRegistration').removeAttr('id').removeAttr('class').attr('id', 'thanks');
+                                td.children('div').text('Vielen Danke für die Registrierung!');
+                                $('#thanks').fadeIn(500);
+                            });
+                        }
+                    }
+                });
+            } else {
+                checkNickNameValidation();
+            }
         });
 
-        $(document.body).on('keyup', '#firstEmail', function() {
-            if (validKeycode()) {
+        $(document.body).on('keyup', '#nickName', function(event) {
+            if (validKeycode(event)) {
+                errorMessage('hide');
+                var nickNameSelector = $('#nameCheck'), nickName = $('#nickName').val();
+
+                if (nickName.length) {
+                    if (nickNameSelector.css('background-image') !== "url(" + imgAjaxLoader + ")") {
+                        nickNameSelector.css('background-image', "url(" + imgAjaxLoader + ")");
+                    }
+                    window.clearTimeout(nickNameValidationTimeoutHandle);
+                    nickNameValidationTimeoutHandle = window.setTimeout(function() {
+                        checkNickNameValidation();
+                    }, 1250);
+                } else {
+                    nickNameSelector.css('background-image', "");
+                }
+            }
+        });
+
+        $(document.body).on('keyup', '#firstEmail', function(event) {
+            if (validKeycode(event)) {
                 errorMessage('hide');
                 var firstMailSelector = $('#emailCheck'), firstEmail = $('#firstEmail').val();
 
                 if (firstEmail.length) {
-                    if ($('#emailCheck').css('background-image') !== "url(" + imgAjaxLoader + ")") {
-                        $('#emailCheck').css('background-image', "url(" + imgAjaxLoader + ")");
+                    if (firstMailSelector.css('background-image') !== "url(" + imgAjaxLoader + ")") {
+                        firstMailSelector.css('background-image', "url(" + imgAjaxLoader + ")");
                     }
                     window.clearTimeout(emailValidationTimeoutHandle);
                     emailValidationTimeoutHandle = window.setTimeout(function() {
@@ -165,9 +253,8 @@ jQuery(function($) {"use strict";
             }
         });
 
-        $(document.body).on('keyup', '#secondEmail', function() {
-            console.log(event.keyCode);
-            if (validKeycode()) {
+        $(document.body).on('keyup', '#secondEmail', function(event) {
+            if (validKeycode(event)) {
                 errorMessage('hide');
                 var secondMailSelector = $('#emailCheckEquality'), secondEmail = $('#secondEmail').val();
 
@@ -216,6 +303,16 @@ jQuery(function($) {"use strict";
                     }
                 }
             });
+        });
+
+        $('.bigButton').on('click', bigButtonClick);
+
+        $('.bigButton').on('slideInProgress', function() {
+            var thisOne = $(this);
+            thisOne.off('click');
+            window.setTimeout(function() {
+                thisOne.on('click', bigButtonClick);
+            }, 1000);
         });
     });
 });

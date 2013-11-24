@@ -30,6 +30,12 @@ if (isset($_POST['action']) && !empty($_POST['action'])) {
 		case 'validateEmail' :
 			validateEmail($_POST['str']);
 			break;
+		case 'validateNickName' :
+			validateNickName($_POST['str']);
+			break;
+		case 'registerUser' :
+			registerUser($_POST['email'], $_POST['nickName']);
+			break;
 	}
 }
 ?>
@@ -121,8 +127,16 @@ class dbConnectController {
 		$result = $this -> connection -> query($query);
 		return $result;
 	}
-	
+
+	public function checkNickName($str) {
+		$str = strtolower($str);
+		$query = "SELECT * FROM participants WHERE username = '$str'";
+		$result = $this -> connection -> query($query);
+		return $result;
+	}
+
 	public function checkEmail($str) {
+		$str = strtolower($str);
 		$query = "SELECT * FROM participants WHERE email = '$str'";
 		$result = $this -> connection -> query($query);
 		return $result;
@@ -211,6 +225,39 @@ class dbConnectController {
 		$result = $this -> connection -> query($query);
 	}
 
+	public function confirmEmail($email, $hash) {
+		$query = "SELECT email, confirmationHash FROM participants WHERE email = '$email' AND confirmationHash = '$hash'";
+		$result = $this -> connection -> query($query);
+		return $result;
+	}
+
+	public function registerUser($nickName, $email, $confirmationHash) {
+		$nickLow = strtolower($nickName);
+		$email = strtolower($email);		
+		$query = "INSERT INTO `participants` (`firstname`, `lastname`, `username`, `password`, `chosePerson`, `pickedBy`, `userid`, `willParticipate`, `email`, `gotEmail`, `confirmationHash`) VALUES ('$nickName', '', '$nickLow', '', '0', '0', NULL, '0', '$email', '0', '$confirmationHash')";
+		$result = $this -> connection -> query($query);		
+	}
+
+}
+
+function registerUser($email, $nickName) {
+	$db = new dbConnectController();
+	$email = filter_var($email, FILTER_SANITIZE_EMAIL);
+	$nickName = filter_var($nickName, FILTER_SANITIZE_STRING);
+	$confirmationHash = generateRandomString();
+
+	if ($email && $nickName) {
+		$db -> registerUser($nickName, $email, $confirmationHash);
+	}
+}
+
+function generateRandomString($length = 32) {
+	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$randomString = '';
+	for ($i = 0; $i < $length; $i++) {
+		$randomString .= $characters[rand(0, strlen($characters) - 1)];
+	}
+	return $randomString;
 }
 
 function validateEmail($str) {
@@ -223,32 +270,41 @@ function validateEmail($str) {
 	}
 }
 
+function validateNickName($str) {
+	if (checkNickName($str)) {
+		echo '-1';
+	} else {
+		echo filter_var($str, FILTER_SANITIZE_STRING);
+	}
+}
+
 function checkMaster($str) {
 	if (md5($str) == "78a575be3a8d26aa990a2685069da168") {
 		echo "<form id='whoAreYouForm' class='leftMargin'>";
 		echo "<table>";
-		echo "<tr><td colspan='2'>Bitte gib deine E-Mail Adresse ein:</td></tr>";
+		echo "<tr><td colspan='2'>Spitzname</td></tr>";
+		echo "<tr><td><input type='text' id='nickName' class='midInput bottomMargin'></td><td><div class='checkEmailIcon bottomMargin' id='nameCheck' /></tr>";
+		echo "<tr><td colspan='2'>E-Mail Adresse</td></tr>";
 		echo "<tr><td><input type='text' id='firstEmail' class='midInput bottomMargin'></td><td><div class='checkEmailIcon bottomMargin' id='emailCheck' /></tr>";
-		echo "<tr><td colspan='2'>Noch einmal zur Sicherheit:</td></tr>";
+		echo "<tr><td colspan='2'>E-Mail Adresse wiederholen</td></tr>";
 		echo "<tr><td><input type='text' id='secondEmail' class='midInput bottomMargin'></td><td><div class='checkEmailIcon bottomMargin' id='emailCheckEquality' /></tr>";
 		echo "<tr><td colspan='2'>&nbsp;</td></tr>";
-		echo "<tr><td><input type='button' id='sendRegistration' disabled='disabled' value='Als Wichtel registrieren' class='smallInput' />";
+		echo "<tr><td><div id='sendRegistration' class='centerAlign midInput smallButton disabled'>Als Wichtel registrieren</div></td><td><div class='checkEmailIcon bottomMargin' id='registerCheck' /></td></tr>";
 		echo "</table>";
 		echo "</form>";
 	}
 }
 
-function checkMasterPhaseTwo($str) {
+function checkNickName($str) {
 	$db = new dbConnectController();
-	if (md5($str) == "767870077154fa15357c8badfc2c5a5e") {
-		getUsersPhaseTwo($db);
-	}
+	$result = $db -> checkNickName($str);
+	return ($result -> num_rows > 0);
 }
 
-function checkEmail($str) {	
+function checkEmail($str) {
 	$db = new dbConnectController();
 	$result = $db -> checkEmail($str);
-	return ($result -> num_rows > 0);	
+	return ($result -> num_rows > 0);
 }
 
 function checkUser($str, $pw) {
