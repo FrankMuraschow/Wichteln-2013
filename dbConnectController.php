@@ -27,7 +27,7 @@ if (isset($_POST['action']) && !empty($_POST['action'])) {
 		case 'sendMail' :
 			sendMail($_POST['str']);
 			break;
-		case 'validateEmail' : 
+		case 'validateEmail' :
 			validateEmail($_POST['str']);
 			break;
 	}
@@ -121,6 +121,12 @@ class dbConnectController {
 		$result = $this -> connection -> query($query);
 		return $result;
 	}
+	
+	public function checkEmail($str) {
+		$query = "SELECT * FROM participants WHERE email = '$str'";
+		$result = $this -> connection -> query($query);
+		return $result;
+	}
 
 	public function checkUserPhaseTwo($str, $pw) {
 		$query = "SELECT * FROM participants WHERE username = '$str' AND password = '" . md5($pw) . "'";
@@ -208,22 +214,25 @@ class dbConnectController {
 }
 
 function validateEmail($str) {
-	echo filter_var($str, FILTER_VALIDATE_EMAIL);
+	if (filter_var($str, FILTER_VALIDATE_EMAIL)) {
+		if (checkEmail($str)) {
+			echo '-1';
+		} else {
+			echo filter_var($str, FILTER_VALIDATE_EMAIL);
+		}
+	}
 }
 
 function checkMaster($str) {
-	$db = new dbConnectController();
-	if (md5($str) == "78a575be3a8d26aa990a2685069da168") {		
+	if (md5($str) == "78a575be3a8d26aa990a2685069da168") {
 		echo "<form id='whoAreYouForm' class='leftMargin'>";
 		echo "<table>";
 		echo "<tr><td colspan='2'>Bitte gib deine E-Mail Adresse ein:</td></tr>";
-		echo "<tr><td><input type='text' id='firstEmail' class='midInput'></td><td><div class='checkEmailIcon' id='emailCheck' /></tr>";
-		echo "<tr><td colspan='2'>&nbsp;</td></tr>";
+		echo "<tr><td><input type='text' id='firstEmail' class='midInput bottomMargin'></td><td><div class='checkEmailIcon bottomMargin' id='emailCheck' /></tr>";
 		echo "<tr><td colspan='2'>Noch einmal zur Sicherheit:</td></tr>";
-		echo "<tr><td><input type='text' id='secondEmail' class='midInput'></td><td><div class='checkEmailIcon' id='emailCheckEquality' /></tr>";
+		echo "<tr><td><input type='text' id='secondEmail' class='midInput bottomMargin'></td><td><div class='checkEmailIcon bottomMargin' id='emailCheckEquality' /></tr>";
 		echo "<tr><td colspan='2'>&nbsp;</td></tr>";
-		echo "<tr><td colspan='2'>&nbsp;</td></tr>";
-		echo "<tr><td><input type='submit' id='sendRegistration' disabled='disabled' value='Als Wichtel registrieren' class='smallInput' />";		
+		echo "<tr><td><input type='button' id='sendRegistration' disabled='disabled' value='Als Wichtel registrieren' class='smallInput' />";
 		echo "</table>";
 		echo "</form>";
 	}
@@ -236,29 +245,10 @@ function checkMasterPhaseTwo($str) {
 	}
 }
 
-function getUsersPhaseTwo($db) {
-	$db -> getLog() -> lwrite("B: getUsers()");
-	$result = $db -> getUsersPhaseTwo();
-	if ($result) {
-		echo "<form id='whoAreYouForm'>";
-		echo "<table>";
-		echo "<tr><td>Wer bist du? - Bitte w&auml;hlen: </td><td><select id='whoAreYouSelector'><option value='empty'>----------</option>";
-
-		while ($row = $result -> fetch_assoc()) {
-			echo "<option value='" . $row['username'] . "'>" . $row['firstname'] . " " . $row['lastname'] . "</option>";
-			$db -> getLog() -> lwrite($row['firstname'] . " " . $row['lastname']);
-		}
-		echo "</select></td></tr>";
-		echo "<tr><td>Bitte gib dein pers&ouml;nliches Kennwort ein:</td><td><input type='text' id='userPw' /></td></tr>";
-		echo "<tr><td></td><td><input type='button' id='user_chose_wichtel' value='Zeige mir meinen Wichtel!'></input></td></tr>";
-		echo "</table>";
-		echo "</form>";
-	} else {
-		echo "Irgendein Fehler. Frag mal den Muri! Schnell!!";
-	}
-
-	$db -> closeConnection();
-	$db -> getLog() -> lwrite("E: getUsers()");
+function checkEmail($str) {	
+	$db = new dbConnectController();
+	$result = $db -> checkEmail($str);
+	return ($result -> num_rows > 0);	
 }
 
 function checkUser($str, $pw) {

@@ -43,6 +43,7 @@ div#loginfield {
 div#dynamicContent {
 	height: 300px;
 	background: rgba(47, 49, 97, 0.9);
+	position: relative;
 }
 
 input {
@@ -171,4 +172,24 @@ span#emailSent {
 	-ms-transition: all 1s ease-in-out;
 	-o-transition: all 1s ease-in-out;
 	transition: all 1s ease-in-out;
+}
+
+.errorMessage {
+	display: block;
+	color: #f5b773;
+	opactity: 0;
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+
+.bottomContainer {
+	position: absolute;
+	bottom: 0;
+}
+
+.bottomMargin {
+	margin-bottom: 15px;
 }

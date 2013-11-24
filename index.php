@@ -14,6 +14,7 @@
 							<input type="button" id="masterPwClick" class="centerAlign leftMargin topMargin" value="Pr&uuml;fe Passwichtelwort" />
 						</div>
 					</div>
+					<div class="errorMessage leftMargin bottomMargin bottomContainer" id="regError"></div>
 				</div>
 				<div class="bigButton">
 					<div class="ButtonCaption">
@@ -22,7 +23,7 @@
 					<div class="arrowImage"></div>
 				</div>
 			</div>
-			
+
 			<div id="howto" class="slideDownContainer upState" data-slideposition="up">
 				<div id="dynamicContent" class="wellVisible topPadding">
 					<div>
