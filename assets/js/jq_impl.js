@@ -34,8 +34,8 @@ jQuery(function($) {"use strict";
                         } else {
                             emailValid = true;
                             errorMessage('hide');
+                            validateForm();
                             $('#emailCheck').css('background-image', "url(" + imgValid + ")");
-                            checkEmailEquality();
                         }
                     } else {
                         emailValid = false;
@@ -72,9 +72,9 @@ jQuery(function($) {"use strict";
                             errorMessage('show', 'Der Name ist schon vergeben')
                         } else {
                             nickNameValid = true;
+                            validateForm();
                             errorMessage('hide');
                             $('#nameCheck').css('background-image', "url(" + imgValid + ")");
-                            checkEmailValidation();
                         }
                     } else {
                         nickNameValid = false;
@@ -95,6 +95,7 @@ jQuery(function($) {"use strict";
 
         if (emailValid && firstEmail === secondEmail) {
             emailEqual = true;
+            validateForm();
             errorMessage('hide');
             $('#emailCheckEquality').css('background-image', "url(" + imgValid + ")");
         } else if (secondEmail) {
@@ -137,10 +138,12 @@ jQuery(function($) {"use strict";
         thisOne.trigger('slideInProgress');
         if (slideContainer.data('slideposition') === 'down') {
             slideContainer.css('top', '-322px');
+            thisOne.css('background', '#606080')
             slideContainer.data('slideposition', 'up');
             rotateSelector(arrowImage, 180);
         } else {
             slideContainer.css('top', '0px');
+            thisOne.css('background', '#040410')
             slideContainer.data('slideposition', 'down');
             rotateSelector(arrowImage, 0);
         }
@@ -155,8 +158,87 @@ jQuery(function($) {"use strict";
         }
     }
 
+    function validateForm() {
+        if (!nickNameValid) {
+            checkNickNameValidation();
+            return;
+        }
+
+        if (!emailValid) {
+            checkEmailValidation();
+            return;
+        }
+
+        if (!emailEqual) {
+            checkEmailEquality();
+            return;
+        }
+
+        checkRegisterButton();
+    }
+
+    function getParameter(paramName) {
+        var searchString = window.location.search.substring(1), i, val, params = searchString.split("&");
+        for ( i = 0; i < params.length; i++) {
+            val = params[i].split("=");
+            if (val[0] === paramName) {
+                return unescape(val[1]);
+            }
+        }
+        return null;
+    }
+
+    function animateBorders() {
+        var items = ['#879fd7', '#859cea', '#cff2f6', '#393e7a', '#dbfcff', '#617cd0', '#444a92', '#304488', '#7c8ac2', '#3d418b'], color = items[Math.floor(Math.random() * items.length)];
+        $('.animatedBorder').css('border-top-color', color);
+        color = items[Math.floor(Math.random() * items.length)];
+        $('.animatedBorder').css('border-right-color', color);
+        color = items[Math.floor(Math.random() * items.length)];
+        $('.animatedBorder').css('border-bottom-color', color);
+        color = items[Math.floor(Math.random() * items.length)];
+        $('.animatedBorder').css('border-left-color', color);
+        setTimeout(function() {
+            animateBorders();
+        }, 3000);
+    }
+
 
     $(document).ready(function() {
+        if (getParameter('confirmation') || getParameter('participation')) {
+
+            var currentAction = getParameter('confirmation') ? 'confirmRegistration' : 'confirmParticipation', contextText = getParameter('confirmation') ? 'Registrierung' : 'Teilnahme';
+            $('#confirmRegistrationText').text('Prüfe ' + contextText);
+            $.ajax({
+                url : "././dbConnectController.php",
+                type : "POST",
+                data : ( {
+                    action : currentAction,
+                    email : getParameter('email'),
+                    confirmationHash : getParameter('confirmationHash')
+                }),
+                beforeSend : function() {
+                    var confirmRegistration = $('#confirmRegistration');
+                    if (confirmRegistration.css('background-image') !== "url(" + imgAjaxLoader + ")") {
+                        confirmRegistration.css('background-image', "url(" + imgAjaxLoader + ")");
+                    }
+                },
+                success : function(result) {
+                    var confirmRegistration = $('#confirmRegistration'), contextText = getParameter('confirmation') ? 'Registrierung' : 'Teilnahme';
+                    result = $.trim(result);
+                    if (result) {
+                        errorMessage('show', result);
+                        confirmRegistration.css('background-image', "url(" + imgInvalid + ")");
+
+                        $('#confirmRegistrationText').text('Fehler bei der ' + contextText);
+                    } else {
+                        errorMessage('hide');
+                        confirmRegistration.css('background-image', "url(" + imgValid + ")");
+                        $('#confirmRegistrationText').text(contextText + ' erfolgreich');
+                    }
+                }
+            });
+        }
+
         $('#masterPw').on("click", function() {
             if ($('#masterPw').val() !== "") {
                 $('#masterPw').val("");
@@ -204,19 +286,18 @@ jQuery(function($) {"use strict";
                             $('#sendRegistration').attr('disabled', 'disabled');
                             $('#sendRegistration').fadeOut(500, function() {
                                 $('#sendRegistration').removeAttr('id').removeAttr('class').attr('id', 'thanks');
-                                td.children('div').text('Vielen Danke für die Registrierung!');
+                                td.children('div').text('Bestätigungs E-Mail versandt');
                                 $('#thanks').fadeIn(500);
                             });
                         }
                     }
                 });
-            } else {
-                checkNickNameValidation();
             }
         });
 
         $(document.body).on('keyup', '#nickName', function(event) {
             if (validKeycode(event)) {
+                window.clearTimeout(nickNameValidationTimeoutHandle);
                 errorMessage('hide');
                 var nickNameSelector = $('#nameCheck'), nickName = $('#nickName').val();
 
@@ -224,7 +305,6 @@ jQuery(function($) {"use strict";
                     if (nickNameSelector.css('background-image') !== "url(" + imgAjaxLoader + ")") {
                         nickNameSelector.css('background-image', "url(" + imgAjaxLoader + ")");
                     }
-                    window.clearTimeout(nickNameValidationTimeoutHandle);
                     nickNameValidationTimeoutHandle = window.setTimeout(function() {
                         checkNickNameValidation();
                     }, 1250);
@@ -236,6 +316,7 @@ jQuery(function($) {"use strict";
 
         $(document.body).on('keyup', '#firstEmail', function(event) {
             if (validKeycode(event)) {
+                window.clearTimeout(emailValidationTimeoutHandle);
                 errorMessage('hide');
                 var firstMailSelector = $('#emailCheck'), firstEmail = $('#firstEmail').val();
 
@@ -243,7 +324,6 @@ jQuery(function($) {"use strict";
                     if (firstMailSelector.css('background-image') !== "url(" + imgAjaxLoader + ")") {
                         firstMailSelector.css('background-image', "url(" + imgAjaxLoader + ")");
                     }
-                    window.clearTimeout(emailValidationTimeoutHandle);
                     emailValidationTimeoutHandle = window.setTimeout(function() {
                         checkEmailValidation();
                     }, 1250);
@@ -255,6 +335,7 @@ jQuery(function($) {"use strict";
 
         $(document.body).on('keyup', '#secondEmail', function(event) {
             if (validKeycode(event)) {
+                window.clearTimeout(emailEqualityTimeoutHandle);
                 errorMessage('hide');
                 var secondMailSelector = $('#emailCheckEquality'), secondEmail = $('#secondEmail').val();
 
@@ -262,15 +343,59 @@ jQuery(function($) {"use strict";
                     if (secondMailSelector.css('background-image') !== "url(" + imgAjaxLoader + ")") {
                         secondMailSelector.css('background-image', "url(" + imgAjaxLoader + ")");
                     }
-                    window.clearTimeout(emailEqualityTimeoutHandle);
                     emailEqualityTimeoutHandle = window.setTimeout(function() {
                         checkEmailEquality();
                     }, 750);
-                } else if (!emailValid) {
-                    checkEmailValidation();
                 } else {
                     secondMailSelector.css('background-image', "");
                 }
+            }
+        });
+
+        $(document.body).on('click', '#participationMail', function() {
+            $.ajax({
+                url : "././dbConnectController.php",
+                type : "POST",
+                data : ( {
+                    action : "sendParticipationMails"
+                }),
+                success : function(result) {
+                    var bla = '';
+                }
+            });
+        });
+
+        $(document.body).on('click', '#wichtelMails', function() {
+            $.ajax({
+                url : "././dbConnectController.php",
+                type : "POST",
+                data : ( {
+                    action : "sendWichtelMails"
+                }),
+                success : function(result) {
+                    var bla = '';
+                }
+            });
+        });
+
+        $(document.body).on('click', '#resendMail', function() {
+            var email = $('#resendEmailAddress').val();
+            $.ajax({
+                url : "././dbConnectController.php",
+                type : "POST",
+                data : ( {
+                    action : "resendMail",
+                    email : email
+                }),
+                success : function(result) {
+                    var bla = '';
+                }
+            });
+        });
+
+        $('#masterPw').on('keyup', function(event) {
+            if (validKeycode(event)) {
+                errorMessage('hide');
             }
         });
 
@@ -296,7 +421,7 @@ jQuery(function($) {"use strict";
                             content.fadeIn({
                                 duration : 300,
                                 complete : function() {
-                                    $('#firstEmail').focus();
+                                    $('#nickName').focus();
                                 }
                             });
                         });
@@ -314,5 +439,29 @@ jQuery(function($) {"use strict";
                 thisOne.on('click', bigButtonClick);
             }, 1000);
         });
+
+        $('#confirmAdmin').on('click', function() {
+            var pw = $('#adminPw').val();
+
+            $.ajax({
+                url : "././dbConnectController.php",
+                type : "POST",
+                data : ( {
+                    action : "confirmAdmin",
+                    str : pw
+                }),
+                success : function(result) {
+                    var resultLength = $.trim(result).length
+
+                    if (resultLength) {
+                        $(document.body).html(result);
+                    } else {
+                        $('#confirmAdmin').val('Wrong pw');
+                    }
+                }
+            });
+        });
+
+        animateBorders();
     });
 });

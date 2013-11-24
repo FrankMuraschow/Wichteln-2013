@@ -1,8 +1,6 @@
 <?php
-function __autoload($class_name) {
-	require_once $class_name . '.php';
-}
 
+require_once('dbConnectController.php');
 $email = $_GET['email'];
 $hash = $_GET['confirmationHash'];
 
