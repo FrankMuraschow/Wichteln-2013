@@ -7,6 +7,6 @@
 		</div> </a>
 	</div>	
 
-Solltest du die Nachricht nicht ordentlich lesen koennen, kopiere diesen Link und ruf ihn manuell auf:<br /><br />
+Solltest du die Nachricht nicht ordentlich lesen koennen, kopiere diesen Link und ruf ihn manuell auf:<br /><br /> 
 confirmUrl
 </body>
